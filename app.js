@@ -1,5 +1,5 @@
 // GeoFolio, bản dùng Supabase. URL và khóa publishable được phép công khai; bảo mật do RLS đảm nhiệm.
-const SUPABASE_URL='https://pnmfhvylcvhooweusrzg.supabase.co',SUPABASE_KEY='sb_publishable_JCklJbw_i5JPnmtJjRXC0g_Gep9xfnW';
+const SUPABASE_URL='https://hsymdjbqfnnlowfjevgv.supabase.co',SUPABASE_KEY='sb_publishable_ribY_HmJ8k7V8rrClfTZsg_sJ42e1QM';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=s=>document.querySelector(s),d10=s=>String(s||'').slice(0,10);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
