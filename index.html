@@ -2,10 +2,10 @@
 <html lang="vi"><head><meta charset="utf-8">
 <title>GeoFolio | Hồ sơ năng lực Địa lí</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0f3d3e">
+<meta name="theme-color" content="#4635B1"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600&family=Fraunces:wght@600&display=swap">
 <style>
-:root{--bg:#edf2f0;--card:#fff;--ink:#15302f;--mut:#58706d;--pri:#0f3d3e;--acc:#3d8f7a;--line:#d3dedb;--on:#fff;--bad:#b3261e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1b1b;--card:#142626;--ink:#e6f0ee;--mut:#9bb3af;--pri:#7fd0bb;--acc:#7fd0bb;--line:#264240;--on:#082220;--bad:#ff9a8f;color-scheme:dark}}
+:root{--bg:#FFFBCA;--card:#fff;--ink:#1d1647;--mut:#5b5190;--pri:#4635B1;--acc:#B771E5;--hi:#AEEA94;--line:#e3dca0;--on:#fff;--bad:#b3261e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1440;--card:#251d5c;--ink:#f3efff;--mut:#b9b0e8;--pri:#B771E5;--acc:#AEEA94;--hi:#3b3290;--line:#3b3290;--on:#1a1440;--bad:#ff9a8f;color-scheme:dark}}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -28,10 +28,17 @@ main{padding:24px;min-width:0;max-width:980px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
 .big{font:600 32px "Fraunces",Georgia,serif;color:var(--pri)}
 .bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin-bottom:12px}.bar i{display:block;height:100%;background:var(--acc)}
-.mut{color:var(--mut);font-size:13px}.tag{background:var(--line);border-radius:6px;padding:1px 8px;font-size:12px}
+.mut{color:var(--mut);font-size:13px}.tag{background:var(--hi);color:var(--ink);border-radius:6px;padding:1px 8px;font-size:12px}
 .tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:560px}td,th{border:1px solid var(--line);padding:8px;text-align:left;font-size:13px}
 fieldset.share{border:1px solid var(--line);border-radius:8px;margin:0 0 10px;padding:6px 12px 8px}legend{font-size:13px;color:var(--mut);padding:0 4px}.ck{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:14px;padding:4px 0}.ck input{width:auto;margin:0}
-.err{color:var(--bad)}hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+.err{color:var(--bad)}.good{color:var(--pri)}
+.top{display:flex;align-items:center;gap:12px;padding:14px 24px;background:var(--pri);color:var(--on)}.top .mut{color:inherit;opacity:.85;display:block}.bn{font:600 22px "Fraunces",Georgia,serif}
+.land{display:grid;grid-template-columns:1fr minmax(300px,480px) 1fr;gap:20px;max-width:1180px;margin:4vh auto;padding:0 16px;align-items:start}
+.slot{min-height:260px;border:2px dashed var(--acc);border-radius:14px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--mut);padding:12px}.slot.wide{grid-column:1/-1;min-height:90px}
+.roles{display:grid;gap:10px;margin-top:10px}.role{text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:14px 16px;cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:2px}.role:hover{border-color:var(--acc);box-shadow:0 0 0 3px var(--hi)}
+fieldset.share{border:1px solid var(--line);border-radius:8px;margin:0 0 10px;padding:6px 12px 8px}legend{font-size:13px;color:var(--mut);padding:0 4px}.ck{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:14px;padding:4px 0}.ck input{width:auto;margin:0}
+iframe{width:100%;height:220px;border:0;border-radius:10px;margin:8px 0}.pic{max-width:100%;max-height:260px;border-radius:10px;display:block;margin:8px 0}
+@media(max-width:860px){.land{grid-template-columns:1fr}.slot{display:none}}hr{border:0;border-top:1px solid var(--line);margin:12px 0}
 @media(max-width:760px){.app{display:block}nav{height:auto;position:static;display:flex;overflow-x:auto;gap:4px}nav button{white-space:nowrap;width:auto}.brand{display:none}}
 </style></head>
 <body><div id="app"></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="app.js"></script></body></html>
