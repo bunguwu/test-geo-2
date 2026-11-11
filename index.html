@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="vi"><head><meta charset="utf-8">
-<title>GeoFolio</title>
+<title>GeoFolio | Hồ sơ năng lực Địa lí</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#4635B1"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600&family=Fraunces:wght@600&display=swap">
 <style>
 :root{--bg:#FFFBCA;--card:#fff;--ink:#1d1647;--mut:#5b5190;--pri:#4635B1;--acc:#B771E5;--hi:#AEEA94;--line:#e3dca0;--on:#fff;--bad:#b3261e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
 
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1440;--card:#251d5c;--ink:#f3efff;--mut:#b9b0e8;--pri:#B771E5;--acc:#AEEA94;--hi:#3b3290;--line:#3b3290;--on:#1a1440;--bad:#ff9a8f;color-scheme:dark}}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1440;--card:#251d5c;--ink:#f3efff;--mut:#b9b0e8;--pri:#B771E5;--acc:#AEEA94;--hi:#3b3290;--line:#3b3290;--on:#1a1440;--bad:#ff9a8f;color-scheme:dark}body::before{content:"";position:fixed;inset:0;background:rgba(26,20,64,.85);z-index:-1}}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif}
+body{margin:0;background:var(--bg) url(background.jpg) center/cover fixed no-repeat;color:var(--ink);font:15px/1.55 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif}
 h1,h2,h3{font-family:"Fraunces",Georgia,"Times New Roman",serif;margin:.2em 0 .4em;line-height:1.2}
 h1{font-size:30px}
 .auth{max-width:480px;margin:5vh auto;padding:16px}
@@ -39,8 +39,9 @@ fieldset.share{border:1px solid var(--line);border-radius:8px;margin:0 0 10px;pa
 .roles{display:grid;gap:10px;margin-top:10px}.role{text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:14px 16px;cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:2px}.role:hover{border-color:var(--acc);box-shadow:0 0 0 3px var(--hi)}
 fieldset.share{border:1px solid var(--line);border-radius:8px;margin:0 0 10px;padding:6px 12px 8px}legend{font-size:13px;color:var(--mut);padding:0 4px}.ck{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:14px;padding:4px 0}.ck input{width:auto;margin:0}
 iframe{width:100%;height:220px;border:0;border-radius:10px;margin:8px 0}.pic{max-width:100%;max-height:260px;border-radius:10px;display:block;margin:8px 0}
+@media(max-width:760px){body{background-attachment:scroll}}
 @media(max-width:860px){.land{grid-template-columns:1fr}.slot{display:none}}hr{border:0;border-top:1px solid var(--line);margin:12px 0}
 .mbar{display:none}
 @media(max-width:760px){.app{display:block}.mbar{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20;background:var(--pri);color:var(--on);padding:10px 14px}.mbar b{font:600 18px "Fraunces",Georgia,serif}.burger{background:none;border:1px solid currentColor;color:inherit;border-radius:8px;font-size:22px;line-height:1;padding:4px 12px;cursor:pointer}nav{display:none;height:auto;position:static;padding:8px}nav.open{display:block}.brand{display:none}}
 </style></head>
-<body><div id="app"></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="app.js?v=5"></script></body></html>
+<body><div id="app"></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="app.js?v=6"></script></body></html>
