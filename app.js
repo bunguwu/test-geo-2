@@ -1,13 +1,13 @@
 // GeoFolio, bản dùng Supabase. URL và khóa publishable được phép công khai; bảo mật do RLS đảm nhiệm.
 const SUPABASE_URL='https://hsymdjbqfnnlowfjevgv.supabase.co',SUPABASE_KEY='sb_publishable_ribY_HmJ8k7V8rrClfTZsg_sJ42e1QM';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{global:{fetch:(u,o)=>fetch(u,{...o,cache:'no-store'})}});
 const $=s=>document.querySelector(s),d10=s=>String(s||'').slice(0,10);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let db={users:[],shares:[],classes:[],members:[],items:[],stops:[],projects:[],tasks:[],subs:[],pub:[]},cur=null;
 const NAV={student:[['home','▦','Tổng quan'],['field','⌖','Nhật ký thực địa'],['proj','◫','Dự án học tập'],['lop','☷','Lớp học'],['rub','✓','Đánh giá & Rubric'],['comm','◎','Kho tư liệu']],teacher:[['cls','▣','Quản lý lớp học'],['grade','✎','Đánh giá học sinh'],['field','⌖','Nhật ký thực địa'],['proj','◫','Dự án học tập'],['comm','◎','Kho tư liệu']],guest:[['comm','◎','Kho tư liệu']]};
 const CRIT=['Độ chính xác dữ liệu','Phân tích không gian','Minh chứng thực địa','Trình bày & số hóa'];
 const LV=[['Dữ liệu thiếu/sai','Cơ bản chính xác','Chính xác, có nguồn','Kiểm chứng đa nguồn'],['Mô tả rời rạc','Nêu được phân bố','Giải thích hợp lí','Phân tích đa chiều'],['Ít minh chứng','Có ảnh/ghi chép','Đủ ảnh và tọa độ','Minh chứng rõ, xác thực'],['Khó theo dõi','Đúng cấu trúc','Trực quan, khoa học','Sáng tạo, dễ khai thác']];
-let view='',tab='sr',msg='',editId=null,editSh=null,csv='',role0=null,mode='login',recovery=false,menuOpen=false;
+let view='',tab='sr',msg='',editId=null,editSh=null,csv='',role0=null,mode='login',recovery=false,menuOpen=false,loadErr=[];
 const fld=(n,l,t='text',x='')=>`<label>${l}<input name="${n}" type="${t}" ${x}></label>`;
 const sel=(n,l,a,v)=>`<label>${l}<select name="${n}">${a.map(o=>`<option ${o===v?'selected':''}>${esc(o)}</option>`).join('')}</select></label>`;
 const mine=(k,u)=>db[k].filter(x=>x.uid===u.id);
@@ -37,7 +37,7 @@ function auth(){
  return `<header class="top"><span>${LOGO}</span><div><b class="bn">GeoFolio</b><span class="mut">Hồ sơ năng lực Địa lí</span></div></header>
  <div class="land"><div class="slot wide" id="slot-banner">Khoảng trống: thêm ảnh banner trang trí tại đây</div><div class="slot" id="slot-trai">Khoảng trống: ảnh trang trí bên trái</div><div>${mid}</div><div class="slot" id="slot-phai">Khoảng trống: ảnh trang trí bên phải</div></div>`}
 
-function shell(u,body){return `<div class="app"><header class="mbar"><button class="burger" data-a="menu" aria-label="Mở menu" aria-expanded="${menuOpen}">☰</button><b>GeoFolio</b></header><nav class="${menuOpen?'open':''}"><h2 class="brand">${LOGO} GeoFolio</h2><p class="brand" style="font-size:13px;opacity:.8">${esc(u.name)} · ${u.role==='teacher'?'Giáo viên':u.role==='student'?'Học sinh':'Khách'}</p>${NAV[u.role].map(n=>`<button class="${n[0]===view?'on':''}" data-a="view" data-id="${n[0]}">${n[1]} ${n[2]}</button>`).join('')}<button data-a="out">⎋ Đăng xuất</button></nav><main>${body}</main></div>`}
+function shell(u,body){return `<div class="app"><header class="mbar"><button class="burger" data-a="menu" aria-label="Mở menu" aria-expanded="${menuOpen}">☰</button><b>GeoFolio</b></header><nav class="${menuOpen?'open':''}"><h2 class="brand">${LOGO} GeoFolio</h2><p class="brand" style="font-size:13px;opacity:.8">${esc(u.name)} · ${u.role==='teacher'?'Giáo viên':u.role==='student'?'Học sinh':'Khách'}</p>${NAV[u.role].map(n=>`<button class="${n[0]===view?'on':''}" data-a="view" data-id="${n[0]}">${n[1]} ${n[2]}</button>`).join('')}<button data-a="refresh">↻ Làm mới</button><button data-a="out">⎋ Đăng xuất</button></nav><main>${loadErr.length?`<div class="card err"><b>Không tải được một số dữ liệu:</b> ${esc(loadErr.join('; '))}<br>Dữ liệu cũ được giữ lại. Hãy kiểm tra đã chạy đủ các file SQL, rồi bấm Làm mới.</div>`:''}${body}</main></div>`}
 
 function tasksHtml(u){
  const ts=myClasses(u).flatMap(c=>db.tasks.filter(t=>t.cid===c.id).map(t=>({...t,cn:c.name})));
@@ -74,8 +74,8 @@ grade(u){const cs=db.classes.filter(c=>c.tid===u.id),ts=db.tasks.filter(t=>cs.so
 const ok=r=>{if(r.error)throw r.error;return r};
 const aff=r=>{ok(r);if(!r.data||!r.data.length)throw new Error('Thao tác không được thực hiện (có thể bạn không có quyền hoặc dữ liệu đã bị xóa).');return r};
 async function load(){
- const q=t=>{let b=sb.from(t).select('*');if(!['class_members','projects'].includes(t))b=b.order('created_at',{ascending:false});return b.then(r=>{if(r.error)throw new Error('Không tải được bảng '+t+': '+r.error.message);return r.data||[]})};
- const [pr,cl,mb,it,st,pj,tk,sm,pb,sh]=await Promise.all(['profiles','classes','class_members','portfolio_items','field_stops','projects','tasks','submissions','community_items','shares'].map(q));
+ const q=t=>{let b=sb.from(t).select('*');if(!['class_members','projects'].includes(t))b=b.order('created_at',{ascending:false});return b.then(r=>{if(r.error){loadErr.push(t+': '+r.error.message);return null}return r.data||[]})};
+ loadErr=[];const old=db,R=await Promise.all(['profiles','classes','class_members','portfolio_items','field_stops','projects','tasks','submissions','community_items','shares'].map(q)),[pr,cl,mb,it,st,pj,tk,sm,pb,sh]=R.map(x=>x||[]);
  db={users:pr,shares:sh.map(s=>({kind:s.kind,iid:s.item_id,cid:s.class_id})),
   classes:cl.map(c=>({id:c.id,tid:c.teacher_id,name:c.name,code:c.code})),
   members:mb.map(m=>({uid:m.student_id,cid:m.class_id})),
@@ -85,6 +85,7 @@ async function load(){
   tasks:tk.map(t=>({id:t.id,cid:t.class_id,type:t.type,title:t.title,due:t.due})),
   subs:sm.map(s=>({id:s.id,tid:s.task_id,uid:s.student_id,note:s.note,r:s.rubric,score:s.score,fb:s.feedback,by:'Giáo viên',gd:d10(s.graded_at)})),
   pub:pb.map(x=>({id:x.id,owner:x.owner_id,author:x.author,file_url:x.file_url,file_name:x.file_name,ts:x.created_at,title:x.title,place:x.place,desc:x.description,date:d10(x.created_at)}))};
+ ['users','classes','members','items','stops','projects','tasks','subs','pub','shares'].forEach((k,i)=>{if(R[i]===null)db[k]=old[k]});
 }
 async function enter(role){
  cur=null;const {data:{session}}=await sb.auth.getSession();
@@ -125,6 +126,7 @@ const A={
  tab:d=>{tab=d.id;msg='';draw()},view:d=>{view=d.id;msg='';editId=null;editSh=null;menuOpen=false;draw()},
  async out(){if(cur&&cur.role!=='guest')await sb.auth.signOut();cur=null;msg='';csv='';editId=null;editSh=null;role0=null;mode='login';view='';menuOpen=false;draw()},
  menu:()=>{menuOpen=!menuOpen;draw()},
+ async refresh(){try{await load()}catch(e){alert(e.message)}menuOpen=false;draw()},
  async delcls(d){if(!confirm('Xóa lớp này? Toàn bộ nhiệm vụ, bài nộp và lượt chia sẻ của lớp sẽ bị xóa.'))return;try{aff(await sb.from('classes').delete().eq('id',d.id).select());await load()}catch(e){alert(e.message)}draw()},
  async kick(d){if(!confirm('Xóa học sinh này khỏi lớp?'))return;try{aff(await sb.from('class_members').delete().eq('class_id',d.cid).eq('student_id',d.uid).select());await load()}catch(e){alert(e.message)}draw()},
  pick:d=>{role0=d.id;mode='login';msg='';draw()},mode:d=>{mode=d.id;msg='';draw()},back:()=>{role0=null;msg='';draw()},edit:d=>{editId=d.id;draw()},editsh:d=>{editSh={kind:d.k,id:d.id};draw();scrollTo(0,0)},cancel:()=>{editSh=null;draw()},
@@ -137,5 +139,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b&
 document.addEventListener('change',async e=>{if(e.target.dataset.a==='prog'){try{aff(await sb.from('projects').update({progress:+e.target.value}).eq('id',e.target.dataset.id).select());await load()}catch(x){alert(x.message)}draw()}});
 document.addEventListener('change',e=>{if(e.target.name==='lat'||e.target.name==='lng')mapUpd()});
 sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){recovery=true;draw()}});
+const autoRefresh=async()=>{if(!cur||document.hidden||editId||editSh||recovery)return;const typing=[...document.querySelectorAll('#app input:not([type=hidden]):not([type=checkbox]):not([type=range]),#app textarea')].some(i=>i.value||(i.files&&i.files.length));if(typing)return;try{await load();draw()}catch(e){}};
+setInterval(autoRefresh,30000);document.addEventListener('visibilitychange',autoRefresh);
 $('#app').textContent='Đang tải…';
 enter().then(draw,e=>{msg='Không kết nối được Supabase: '+(e&&e.message||e);draw()});
